@@ -255,7 +255,33 @@ TEST_F( cuda , team_vector )
 
 #if defined( KOKKOS_ENABLE_CUDA_TASK_POLICY )
 
-TEST_F( cuda , task_policy )
+TEST_F( cuda , task_fib )
+{
+  for ( int i = 0 ; i < 25 ; ++i ) {
+    TestTaskPolicy::TestFib< Kokkos::Cuda >::run(i, (i+1)*1000000 );
+  }
+}
+
+TEST_F( cuda , task_depend )
+{
+  for ( int i = 0 ; i < 25 ; ++i ) {
+    TestTaskPolicy::TestTaskDependence< Kokkos::Cuda >::run(i);
+  }
+}
+
+TEST_F( cuda , task_team )
+{
+  TestTaskPolicy::TestTaskTeam< Kokkos::Cuda >::run(1000);
+  TestTaskPolicy::TestTaskTeamValue< Kokkos::Cuda >::run(1000);
+}
+
+#endif // #if defined( KOKKOS_ENABLE_CUDA_TASK_POLICY )
+
+//----------------------------------------------------------------------------
+
+#if defined( KOKKOS_ENABLE_CUDA_TASK_POLICY )
+
+TEST_F( cuda , old_task_policy )
 {
   TestTaskPolicy::test_task_dep< Kokkos::Cuda >( 10 );
 
@@ -269,16 +295,16 @@ TEST_F( cuda , task_policy )
   }
 }
 
-TEST_F( cuda , task_team )
+TEST_F( cuda , old_task_team )
 {
   TestTaskPolicy::test_task_team< Kokkos::Cuda >(1000);
 }
 
-TEST_F( cuda , task_latch )
+TEST_F( cuda , old_task_latch )
 {
   TestTaskPolicy::test_latch< Kokkos::Cuda >(10);
   TestTaskPolicy::test_latch< Kokkos::Cuda >(1000);
 }
 
-#endif /* #if defined( KOKKOS_ENABLE_CUDA_TASK_POLICY ) */
+#endif // #if defined( KOKKOS_ENABLE_CUDA_TASK_POLICY )
 
